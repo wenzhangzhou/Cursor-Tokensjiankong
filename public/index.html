@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cursor 用量工作台</title>
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <p class="kicker">本机 · 127.0.0.1:3790</p>
+      <h1>Cursor 用量工作台</h1>
+      <p class="lede">账单来自 Cursor 仪表盘接口。任务名是对话标题或 Agent 标题，按时间窗对齐，不是逐条官方归属。</p>
+    </div>
+    <div class="actions">
+      <button id="sync" type="button">同步用量</button>
+      <a class="ghost" href="/api/export.csv">导出 CSV</a>
+      <p id="sync-meta" class="meta">尚未同步</p>
+    </div>
+  </header>
+
+  <p id="error" class="error" hidden></p>
+
+  <section class="cards" aria-label="汇总">
+    <article class="card" id="card-today">
+      <h2>今日</h2>
+      <p class="figure">尚未同步</p>
+      <p class="detail"></p>
+    </article>
+    <article class="card" id="card-week">
+      <h2>本周</h2>
+      <p class="figure">尚未同步</p>
+      <p class="detail"></p>
+    </article>
+    <article class="card" id="card-month">
+      <h2>本月</h2>
+      <p class="figure">尚未同步</p>
+      <p class="detail"></p>
+    </article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>按任务</h2>
+      <p>一个任务 = 一条 Cursor 对话或 Agent。没有标题时显示「未命名会话」。</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>任务</th>
+            <th>次数</th>
+            <th>输入</th>
+            <th>输出</th>
+            <th>缓存读</th>
+            <th>缓存写</th>
+            <th>费用（美元）</th>
+            <th>最近</th>
+          </tr>
+        </thead>
+        <tbody id="tasks"><tr><td colspan="8" class="empty">同步之后，这里按对话标题汇总。hooks 还没触发时，用本机已有对话记录对齐。</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="split">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>按日</h2>
+        <p>只统计已同步窗口里的明细。</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>次数</th>
+              <th>输入</th>
+              <th>输出</th>
+              <th>费用（美元）</th>
+            </tr>
+          </thead>
+          <tbody id="days"><tr><td colspan="5" class="empty">尚未同步</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head">
+        <h2>按模型</h2>
+        <p>模型名来自账单事件，不自行归类。</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>模型</th>
+              <th>次数</th>
+              <th>输入</th>
+              <th>输出</th>
+              <th>费用（美元）</th>
+            </tr>
+          </thead>
+          <tbody id="models"><tr><td colspan="5" class="empty">尚未同步</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <footer>
+    <p>非官方接口，Cursor 改版后同步会失败并显示原因，不会补假数字。Token 只留在本机内存里，不写进 data/，也不发到第三方。</p>
+  </footer>
+  <script src="/app.js"></script>
+</body>
+</html>

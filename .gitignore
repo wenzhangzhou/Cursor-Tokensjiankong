@@ -1,0 +1,5 @@
+data/*.json
+data/*.jsonl
+data/*.log
+data/*.tmp
+node_modules/

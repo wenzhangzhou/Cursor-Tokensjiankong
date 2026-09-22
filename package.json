@@ -1,0 +1,10 @@
+{
+  "name": "cursor-usage-workbench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "本机 Cursor 用量工作台：账单接口 + 对话标题",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
