@@ -54,6 +54,16 @@ button:disabled { opacity: 0.6; cursor: wait; }
   background: var(--warn-bg);
   color: var(--warn);
 }
+.outside {
+  width: min(1120px, calc(100% - 32px));
+  margin: 12px auto 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff8ee;
+  border: 1px solid #ead7b8;
+}
+.outside h2 { font-size: 14px; }
+.outside p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 18px 0; }
 .card, .panel {
   background: var(--card);

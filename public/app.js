@@ -22,6 +22,13 @@ function fmtTime(ms) {
   return m + "-" + d + " " + hh + ":" + mm;
 }
 
+function periodBit(totals) {
+  const sum = tokenSum(totals || {});
+  const count = (totals && totals.count) || 0;
+  if (!count) return "0 次";
+  return count + " 次 / " + (sum == null ? "无 token" : fmtInt(sum) + " token") + " / " + fmtUsd(totals.cents);
+}
+
 function tokenSum(totals) {
   const parts = [totals.input, totals.output, totals.cacheRead, totals.cacheWrite];
   if (parts.every((part) => part == null)) return null;
@@ -35,6 +42,11 @@ function fillCard(id, totals, synced) {
   if (!synced) {
     figure.textContent = "尚未同步";
     detail.textContent = "";
+    return;
+  }
+  if (!totals.count) {
+    figure.textContent = "0";
+    detail.textContent = "次数 0 · 费用 —";
     return;
   }
   const sum = tokenSum(totals);
@@ -56,6 +68,19 @@ function render(summary) {
   fillCard("card-week", summary.periods.week, synced);
   fillCard("card-month", summary.periods.month, synced);
 
+  const outside = summary.outside || { today: {}, week: {}, month: {} };
+  const outsideBox = $("outside");
+  if (synced) {
+    outsideBox.hidden = false;
+    $("outside-text").textContent = [
+      "今日 " + periodBit(outside.today),
+      "本周 " + periodBit(outside.week),
+      "本月 " + periodBit(outside.month),
+    ].join(" · ") + "。这些不计入上面的卡片。";
+  } else {
+    outsideBox.hidden = true;
+  }
+
   const meta = $("sync-meta");
   if (summary.meta && summary.meta.syncedAt) {
     const when = new Date(summary.meta.syncedAt);
@@ -69,8 +94,8 @@ function render(summary) {
   const tasks = $("tasks");
   if (!summary.tasks.length) {
     tasks.innerHTML = '<tr><td colspan="8" class="empty">' + (synced
-      ? "这个窗口里没有可对齐的账单事件。若 hooks 尚未触发，新对话结束后才会追加标题。"
-      : "同步之后，这里按对话标题汇总。") + "</td></tr>";
+      ? "本机对话列表里没有和这些账单对得上的记录。"
+      : "同步之后，这里只显示本机对话。") + "</td></tr>";
   } else {
     tasks.innerHTML = summary.tasks.map((task) => {
       const tag = task.isSubagent ? '<span class="tag">子任务</span>' : "";

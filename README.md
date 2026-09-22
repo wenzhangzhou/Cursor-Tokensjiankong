@@ -29,12 +29,13 @@ Node 使用 `C:\Program Files\nodejs\node.exe`。读 SQLite 用 Node 自带的 `
    任务 = Cursor 对话标题。标题来自同一数据库里的 `composerHeaders.name`。  
    没有标题时显示「未命名会话」。  
    另外在用户级 `~\.cursor\hooks.json` 增加了 `stop` 和 `sessionEnd`，调用 `hooks/record-task.js`，把时间、工作区、标题（查得到才有）和 payload 里若存在的 tokens 追加到 `data/task-events.jsonl`。  
-   账单事件如果带有 `conversationId`，优先对上本机同 id 的对话标题。对不上时，再按对话的创建时间到最后更新时间对齐；多个窗口重叠时，取得更短的那条。
+   今日 / 本周 / 本月，以及按任务、按日、按模型，只统计 `conversationId` 能在本机 `composerHeaders` 里找到的事件。找不到的进「未在本机留下对话」，不进主数字。不再用时间窗把别的事件算进某条本地对话。
 
 ## 局限
 
 - 用量接口是社区验证过的**非官方**接口，Cursor 随时可能改。失败时页面只显示原因（未登录、HTTP 状态、字段对不上），**不会编造数字**。
 - `crsr_…` User API Key 不能用来拉用量。
-- 标题对齐不是 100%。事件里没有 `conversationId` 时只能靠时间窗，并行对话会偶发归错。有 id 但本机已经删掉该对话时，仍会显示「未命名会话」。
+- 这不是操作系统层面的「本机流量」。账单接口没有机器码，只能用本机是否还留着该对话来判断。云端同步过来的对话、或本机已删掉的对话，会划错边。
+- 本机数据库里的 `tokenCount` 目前是 0，上下文 token 也不是账单消耗，所以不能改成纯本地相加。
 - hooks 里的 token 字段目前经常是空的，任务上的 token / 费用以账单明细为准，避免和 hooks 重复相加。
 - 改完 hooks 后，已经打开的 Cursor 需要重载窗口或重启，之后的会话结束才会写 `task-events.jsonl`。

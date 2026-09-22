@@ -11,7 +11,7 @@
     <div>
       <p class="kicker">本机 · 127.0.0.1:3790</p>
       <h1>Cursor 用量工作台</h1>
-      <p class="lede">账单来自 Cursor 仪表盘接口。任务名是对话标题或 Agent 标题，按时间窗对齐，不是逐条官方归属。</p>
+      <p class="lede">数字来自账号账单，但只计入这台电脑对话列表里对得上的事件。对不上的不进今日、本周、本月。</p>
     </div>
     <div class="actions">
       <button id="sync" type="button">同步用量</button>
@@ -22,7 +22,12 @@
 
   <p id="error" class="error" hidden></p>
 
-  <section class="cards" aria-label="汇总">
+  <section id="outside" class="outside" hidden>
+    <h2>未在本机留下对话</h2>
+    <p id="outside-text"></p>
+  </section>
+
+  <section class="cards" aria-label="本机汇总">
     <article class="card" id="card-today">
       <h2>今日</h2>
       <p class="figure">尚未同步</p>
@@ -43,7 +48,7 @@
   <section class="panel">
     <div class="panel-head">
       <h2>按任务</h2>
-      <p>一个任务 = 一条 Cursor 对话或 Agent。没有标题时显示「未命名会话」。</p>
+      <p>只列出本机对话。没有标题时显示「未命名会话」。</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -68,7 +73,7 @@
     <section class="panel">
       <div class="panel-head">
         <h2>按日</h2>
-        <p>只统计已同步窗口里的明细。</p>
+        <p>只统计本机对得上的明细。</p>
       </div>
       <div class="table-wrap">
         <table>
